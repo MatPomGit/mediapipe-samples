@@ -78,7 +78,7 @@ Demo na żywo i kod są dostępne na Codepen.
 [Zobacz przykład na Codepen](https://codepen.io/mediapipe-preview/pen/ZEqzpRg)
 
 **Dla studentów - projekty do zbudowania:**
-- Dodaj funkcję zapisu wycięte obiektu
+- Dodaj funkcję zapisu wyciętego obiektu
 - Stwórz edytor kolaży
 - Zbuduj aplikację do usuwania tła
 - Dodaj opcję "inteligentnej gumy" do edycji

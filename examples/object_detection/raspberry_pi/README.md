@@ -4,7 +4,7 @@ Ten przykład używa [MediaPipe](https://github.com/google/mediapipe) z Pythonem
 
 **Dla początkujących - MediaPipe na Raspberry Pi:**
 
-Raspberry Pi to mały, niedro komputer idealny do nauki programowania i projektów IoT (Internet of Things). Ten przykład pokazuje, jak uruchomić zaawansowane uczenie maszynowe na niewielkim urządzeniu!
+Raspberry Pi to mały, niedrogi komputer idealny do nauki programowania i projektów IoT (Internet of Things). Ten przykład pokazuje, jak uruchomić zaawansowane uczenie maszynowe na niewielkim urządzeniu!
 
 **Dlaczego Raspberry Pi?**
 - 💰 Tani (około 200-300 zł)
