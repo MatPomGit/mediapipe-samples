@@ -1,43 +1,84 @@
-# MediaPipe Image Classifier example with Raspberry Pi
+# MediaPipe - Przykład Klasyfikacji Obrazów na Raspberry Pi
 
-This example uses [MediaPipe](https://github.com/google/mediapipe) with Python on
-a Raspberry Pi to perform real-time image classification using images
-streamed from the camera.
+Ten przykład używa [MediaPipe](https://github.com/google/mediapipe) z Pythonem na Raspberry Pi do wykonywania klasyfikacji obrazów w czasie rzeczywistym, wykorzystując obrazy strumieniowane z kamery.
 
-## Set up your hardware
+**Dla początkujących - klasyfikacja obrazów na Raspberry Pi:**
 
-Before you begin, you need to
-[set up your Raspberry Pi](https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up)
-with Raspberry 64-bit Pi OS (preferably updated to Buster).
+Ten projekt pokazuje, jak zamienić Raspberry Pi w inteligentną kamerę, która rozpoznaje obiekty! To świetny projekt do nauki zarówno Pythona, jak i sztucznej inteligencji.
 
-You also need to [connect and configure the Pi Camera](
-https://www.raspberrypi.org/documentation/configuration/camera.md) if you use
-the Pi Camera. This code also works with USB camera connect to the Raspberry Pi.
+**Zastosowania na Raspberry Pi:**
+- **Edukacja przyrodnicza**: Rozpoznawanie gatunków roślin i zwierząt
+- **Automatyka domowa**: Inteligentny system rozpoznający obiekty
+- **Sortowanie**: Automatyczna kategoryzacja przedmiotów
+- **Monitoring**: Rozpoznawanie produktów na produkcji
+- **Projekty hobbystyczne**: Inteligentny karmnik dla ptaków (rozpoznaje gatunki)
 
-And to see the results from the camera, you need a monitor connected
-to the Raspberry Pi. It's okay if you're using SSH to access the Pi shell
-(you don't need to use a keyboard connected to the Pi)—you only need a monitor
-attached to the Pi to see the camera stream.
+## Konfiguracja sprzętu
 
-## Install MediaPipe
+Przed rozpoczęciem musisz [skonfigurować Raspberry Pi](https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up) z 64-bitowym Raspberry Pi OS (najlepiej zaktualizowanym do Buster).
 
-You can install the required dependencies using the setup.sh script provided with this project.
+**Lista zakupów dla projektu:**
+- Raspberry Pi 4 (2GB RAM lub więcej - zalecane)
+- Karta microSD (minimum 16GB)
+- Zasilacz oficjalny dla Raspberry Pi
+- Pi Camera Module v2 LUB kamera USB
+- Monitor z kablem HDMI (do oglądania wyników)
+- (Opcjonalnie) Obudowa dla Raspberry Pi
 
-## Download the examples repository
+Musisz również [podłączyć i skonfigurować Pi Camera](https://www.raspberrypi.org/documentation/configuration/camera.md), jeśli używasz Pi Camera. Ten kod działa również z kamerą USB podłączoną do Raspberry Pi.
 
-First, clone this Git repo onto your Raspberry Pi.
+**Konfiguracja kamery (Pi Camera):**
+1. Wyłącz Raspberry Pi
+2. Podłącz wstążkę kabla kamery do portu Camera (obok HDMI)
+3. Włącz Raspberry Pi
+4. W terminalu wpisz: `sudo raspi-config`
+5. Wybierz "Interface Options" → "Legacy Camera" → "Yes"
+6. Zrestartuj Pi: `sudo reboot`
 
-Run this script to install the required dependencies and download the TFLite models:
+Aby zobaczyć wyniki z kamery, potrzebujesz monitora podłączonego do Raspberry Pi. W porządku, jeśli używasz SSH do dostępu do powłoki Pi (nie potrzebujesz klawiatury podłączonej do Pi) - potrzebujesz tylko monitora podłączonego do Pi, aby zobaczyć strumień z kamery.
 
+## Instalacja MediaPipe
+
+Możesz zainstalować wymagane zależności używając skryptu setup.sh dołączonego do tego projektu.
+
+## Pobranie repozytorium przykładów
+
+Najpierw sklonuj to repozytorium Git na swoje Raspberry Pi.
+
+**Jeśli to Twój pierwszy projekt na Raspberry Pi:**
+1. Otwórz Terminal (ikona na górnym pasku)
+2. Upewnij się, że masz zainstalowany git:
+```bash
+sudo apt-get update
+sudo apt-get install git
 ```
+3. Sklonuj repozytorium
+
+Uruchom ten skrypt, aby zainstalować wymagane zależności i pobrać modele TFLite:
+
+```bash
 cd mediapipe/examples/image_classification/raspberry_pi
 sh setup.sh
 ```
 
-## Run the example
-```
+**Czas instalacji**: Pierwsza instalacja może potrwać 5-15 minut, w zależności od szybkości Internetu. To normalne - pobieranych jest wiele bibliotek!
+
+## Uruchomienie przykładu
+
+```bash
 python3 classify.py
 ```
+
+**Co zobaczysz:**
+- Obraz z kamery na monitorze
+- Top 5 najbardziej prawdopodobnych kategorii dla tego, co widzi kamera
+- Pewność klasyfikacji dla każdej kategorii (0-100%)
+- Liczba klatek na sekundę (FPS) w lewym górnym rogu
+
+**Eksperymentowanie:**
+- Pokaż kamerze różne obiekty (kubek, telefon, książkę)
+- Zobacz, jak zmienia się klasyfikacja w czasie rzeczywistym
+- Sprawdź, jak dobrze model radzi sobie z nietypowymi obiektami
 *   You can optionally specify the `model` parameter to set the TensorFlow Lite
     model to be used:
     *   The default value is `classifier.tflite`
