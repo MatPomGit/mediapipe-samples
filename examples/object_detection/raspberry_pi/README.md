@@ -1,53 +1,91 @@
-# MediaPipe Object Detection example with Raspberry Pi
+# MediaPipe - Przykład Detekcji Obiektów na Raspberry Pi
 
-This example uses [MediaPipe](https://github.com/google/mediapipe) with Python on
-a Raspberry Pi to perform real-time object detection using images streamed from
-the Pi Camera. It draws a bounding box around each detected object in the camera
-preview (when the object score is above a given threshold).
+Ten przykład używa [MediaPipe](https://github.com/google/mediapipe) z Pythonem na Raspberry Pi do wykonywania detekcji obiektów w czasie rzeczywistym, wykorzystując obraz strumieniowany z Pi Camera. Rysuje ramkę ograniczającą wokół każdego wykrytego obiektu w podglądzie kamery (gdy wynik obiektu przekracza zadany próg).
 
-## Set up your hardware
+**Dla początkujących - MediaPipe na Raspberry Pi:**
 
-Before you begin, you need to
-[set up your Raspberry Pi](https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up)
-with Raspberry 64-bit Pi OS (preferably updated to Buster).
+Raspberry Pi to mały, niedro komputer idealny do nauki programowania i projektów IoT (Internet of Things). Ten przykład pokazuje, jak uruchomić zaawansowane uczenie maszynowe na niewielkim urządzeniu!
 
-You also need to [connect and configure the Pi Camera](
-https://www.raspberrypi.org/documentation/configuration/camera.md) if you use
-the Pi Camera. This code also works with USB camera connect to the Raspberry Pi.
+**Dlaczego Raspberry Pi?**
+- 💰 Tani (około 200-300 zł)
+- 🔌 Niskie zużycie energii
+- 📦 Kompaktowy rozmiar
+- 🐍 Świetny do nauki Pythona
+- 🤖 Idealny do projektów robotyki i automatyki
 
-And to see the results from the camera, you need a monitor connected
-to the Raspberry Pi. It's okay if you're using SSH to access the Pi shell
-(you don't need to use a keyboard connected to the Pi)—you only need a monitor
-attached to the Pi to see the camera stream.
+**Zastosowania detekcji obiektów na Raspberry Pi:**
+- Inteligentny dzwonek do drzwi (wykrywanie osób)
+- System bezpieczeństwa domowego
+- Automatyczne karmienie zwierząt (wykrywanie pupila)
+- Licznik osób w pomieszczeniu
+- Sortowanie obiektów w automatyce
+- Projekty edukacyjne z robotyki
 
-## Install MediaPipe
+## Konfiguracja sprzętu
 
-You can install the required dependencies using the setup.sh script provided with this project.
+Przed rozpoczęciem musisz [skonfigurować Raspberry Pi](https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up) z 64-bitowym Raspberry Pi OS (najlepiej zaktualizowanym do Buster).
 
-## Download the examples repository
+**Wymagania sprzętowe:**
+- Raspberry Pi 4 (zalecane) lub Pi 3B+ 
+- Karta microSD (minimum 16GB, zalecane 32GB)
+- Zasilacz USB-C (dla Pi 4) lub micro-USB (dla Pi 3)
+- Pi Camera lub kamera USB
+- Monitor z kablem HDMI
+- (Opcjonalnie) Klawiatura i mysz
 
-First, clone this Git repo onto your Raspberry Pi.
+Musisz również [podłączyć i skonfigurować Pi Camera](https://www.raspberrypi.org/documentation/configuration/camera.md), jeśli używasz Pi Camera. Ten kod działa również z kamerą USB podłączoną do Raspberry Pi.
 
-Run this script to install the required dependencies and download the TFLite models:
+**Konfiguracja kamery:**
+1. Podłącz Pi Camera do portu Camera na Raspberry Pi
+2. Uruchom `sudo raspi-config`
+3. Przejdź do "Interface Options" → "Camera"
+4. Włącz kamerę i zrestartuj Pi
 
-```
+Aby zobaczyć wyniki z kamery, potrzebujesz monitora podłączonego do Raspberry Pi. W porządku, jeśli używasz SSH do dostępu do powłoki Pi (nie potrzebujesz klawiatury podłączonej do Pi) - potrzebujesz tylko monitora podłączonego do Pi, aby zobaczyć strumień z kamery.
+
+## Instalacja MediaPipe
+
+Możesz zainstalować wymagane zależności używając skryptu setup.sh dołączonego do tego projektu.
+
+**Co robi skrypt setup.sh:**
+- Instaluje Python i wymagane biblioteki
+- Pobiera modele TFLite
+- Konfiguruje środowisko
+
+## Pobranie repozytorium przykładów
+
+Najpierw sklonuj to repozytorium Git na swoje Raspberry Pi.
+
+**Jeśli dopiero zaczynasz z Raspberry Pi:**
+1. Otwórz terminal na Raspberry Pi
+2. Upewnij się, że masz zainstalowany git: `sudo apt-get install git`
+3. Sklonuj repozytorium
+
+Uruchom ten skrypt, aby zainstalować wymagane zależności i pobrać modele TFLite:
+
+```bash
 cd mediapipe/examples/object_detection/raspberry_pi
 sh setup.sh
 ```
 
-## Run the example
+**Co się dzieje podczas instalacji:**
+- Pobierane są biblioteki Python (numpy, opencv, itp.)
+- Pobierane są modele detekcji obiektów
+- Konfigurowane jest środowisko wirtualne Python
 
-```
+## Uruchomienie przykładu
+
+```bash
 python3 detect.py \
   --model efficientdet_lite0.tflite
 ```
 
-You should see the camera feed appear on the monitor attached to your Raspberry
-Pi. Put some objects in front of the camera, like a coffee mug or keyboard, and
-you'll see boxes drawn around those that the model recognizes, including the
-label and score for each. It also prints the number of frames per second (FPS)
-at the top-left corner of the screen. As the pipeline contains some processes
-other than model inference, including visualizing the detection results, you can
+**Oczekiwane rezultaty:**
+
+Powinieneś zobaczyć obraz z kamery pojawiający się na monitorze podłączonym do Raspberry Pi. Umieść kilka obiektów przed kamerą, takie jak kubek do kawy lub klawiaturę, a zobaczysz ramki narysowane wokół tych, które model rozpozna, wraz z etykietą i wynikiem dla każdego. W lewym górnym rogu ekranu wyświetla się również liczba klatek na sekundę (FPS). 
+
+**Wydajność:**
+Ponieważ pipeline zawiera procesy inne niż tylko wnioskowanie modelu, w tym wizualizację wyników detekcji, możesz
 expect a higher FPS if your inference pipeline runs in headless mode without
 visualization.
 
