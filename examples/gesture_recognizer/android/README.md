@@ -80,7 +80,7 @@ Rozpoznawanie gestów to proces identyfikowania znaczących ruchów dłoni. Apli
 
 **Jak używać aplikacji - pierwsze kroki:**
 1. Uruchom aplikację i pozwól na dostęp do kamery
-2. Umieść dłoń przed kameră (na odległość około 30-50 cm)
+2. Umieść dłoń przed kamerą (na odległość około 30-50 cm)
 3. Spróbuj pokazać różne gesty:
    - Zaciśnij pięść
    - Pokaż kciuk w górę

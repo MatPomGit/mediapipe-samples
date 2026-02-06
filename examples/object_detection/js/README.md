@@ -52,5 +52,5 @@ Demo na żywo i kod są dostępne na Codepen - platformie do testowania i udost�
 Na Codepen możesz:
 - Zobaczyć cały kod źródłowy
 - Modyfikować kod i natychmiast widzieć wyniki
-- Ekserymentować z parametrami detekcji
+- Eksperymentować z parametrami detekcji
 - Uczyć się, jak zintegrować MediaPipe ze swoją stroną internetową
