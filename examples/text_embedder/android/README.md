@@ -1,48 +1,104 @@
-# MediaPipe Tasks Text Embedder Android Demo
+# MediaPipe Tasks - Demo Osadzania Tekstu (Text Embedder) na Androidzie
 
-### Overview
+### Przegląd
 
-This is an app that compare the similarity between two texts, with the 
-option to use a [Mobile Bert](https://storage.googleapis.com/mediapipe-tasks/text_embedder/mobilebert_embedding_with_metadata.tflite),
-or [Average word-embedding](https://storage.googleapis.com/mediapipe-tasks/text_embedder/regex_embedder_with_metadata.tflite)
-model. The model files are downloaded by a Gradle script when you build and run
-the app. You don't need to do any steps to download TFLite models into the
-project explicitly unless you wish to use your own models. If you do use your
-own models, place them into the app's *assets* directory.
+To jest aplikacja porównująca podobieństwo między dwoma tekstami. Wykorzystuje modele [Mobile Bert](https://storage.googleapis.com/mediapipe-tasks/text_embedder/mobilebert_embedding_with_metadata.tflite) lub [Average word-embedding](https://storage.googleapis.com/mediapipe-tasks/text_embedder/regex_embedder_with_metadata.tflite).
 
-This application should be run on a physical Android device to take advantage of
-the physical camera, though the gallery tab will enable you to use an emulator
-for opening locally stored files.
+**Co to jest osadzanie tekstu (Text Embedding)?**
+
+Osadzanie tekstu to proces przekształcania tekstu w wektor liczb, który reprezentuje jego znaczenie. To jak "odcisk palca semantyczny" tekstu:
+- Dwa teksty o podobnym znaczeniu mają podobne wektory
+- Dwa teksty o różnym znaczeniu mają różne wektory
+- Możemy obliczyć "podobieństwo semantyczne" między tekstami
+
+**Różnica między osadzaniem tekstu a klasyfikacją:**
+- **Klasyfikacja tekstu**: "Czy to pozytywne czy negatywne?"
+- **Osadzanie tekstu**: "Jak podobne są te teksty semantycznie?"
+
+**Przykłady użycia:**
+
+- **Wyszukiwanie semantyczne**: "Znajdź dokumenty o podobnej treści"
+- **Wykrywanie duplikatów**: Czy te dwa opisy mówią o tym samym?
+- **Rekomendacje**: Znajdź artykuły podobne do tego, który czytasz
+- **Grupowanie**: Automatyczne kategoryzowanie tekstów według tematyki
+- **Analiza podobieństwa**: Porównywanie odpowiedzi, recenzji, komentarzy
+
+**Jak działa aplikacja:**
+1. Wprowadzasz dwa teksty
+2. Model przekształca każdy tekst w wektor (embedding)
+3. Oblicza podobieństwo między wektorami (cosinusowe)
+4. Wyświetla wynik: 0% (całkowicie różne) do 100% (identyczne znaczenie)
+
+**Modele dostępne:**
+- **Mobile BERT**: Zaawansowany model kontekstowy, dokładniejszy
+- **Average Word Embedding**: Prostszy model oparty na średniej słów, szybszy
+
+**Ciekawostka - semantyka vs składnia:**
+Embeddingi rozumieją znaczenie, nie tylko słowa:
+- "Pies szczeka głośno" i "Głośny hałas od psa" → wysokie podobieństwo
+- "Pies szczeka głośno" i "Kot miauczy cicho" → niskie podobieństwo
+
+**Informacja o modelach**: Pliki modeli są automatycznie pobierane przez skrypt Gradle podczas budowania i uruchamiania aplikacji. Nie musisz wykonywać kroków ręcznego pobierania modeli TFLite do projektu, chyba że chcesz użyć własnych modeli. Jeśli zdecydujesz się na własne modele, umieść je w katalogu *assets* aplikacji.
+
+**Wymagania sprzętowe**: Ta aplikacja powinna być uruchamiana na fizycznym urządzeniu Android. Możesz jednak użyć emulatora do testowania funkcjonalności galerii (otwieranie lokalnie zapisanych plików).
 
 ![Text Embedder Demo](textembedder.png?raw=true "Text Embedder Demo")
 
-## Build the demo using Android Studio
+## Budowanie demo w Android Studio - Instrukcja krok po kroku
 
-### Prerequisites
+### Wymagania wstępne (co musisz mieć przed rozpoczęciem)
 
-* The **[Android Studio](https://developer.android.com/studio/index.html)**
-  IDE. This sample has been tested on Android Studio Dolphin.
+*   **[Android Studio](https://developer.android.com/studio/index.html)** - zintegrowane środowisko programistyczne (IDE) do tworzenia aplikacji Android. Ten przykład został przetestowany na Android Studio Dolphin.
 
-* A physical Android device with a minimum OS version of SDK 24 (Android 7.0 -
-  Nougat) with developer mode enabled. The process of enabling developer mode
-  may vary by device. You may also use an Android emulator with more limited
-  functionality.
+*   **Fizyczne urządzenie Android** z minimalną wersją systemu SDK 24 (Android 7.0 - Nougat) z włączonym trybem programisty. 
+    
+    **Jak włączyć tryb programisty:**
+    1. Otwórz Ustawienia na urządzeniu Android
+    2. Przejdź do "O telefonie" lub "Informacje o urządzeniu"
+    3. Znajdź "Numer kompilacji" i kliknij go 7 razy
+    4. Pojawi się komunikat "Jesteś teraz programistą!"
+    5. Wróć do głównych ustawień i znajdź nową opcję "Opcje programisty"
+    6. Włącz "Debugowanie USB"
+    
+    Proces może się różnić w zależności od producenta urządzenia. Możesz również użyć emulatora Android, ale z ograniczoną funkcjonalnością.
 
-### Building
+### Budowanie aplikacji - Szczegółowe kroki
 
-* Open Android Studio. From the Welcome screen, select Open an existing Android
-  Studio project.
+**Krok 1: Otwórz projekt w Android Studio**
 
-* From the Open File or Project window that appears, navigate to and select the
-  mediapipe/examples/text_embedder/android directory. Click OK. You may be
-  asked if you trust the project. Select Trust.
+*   Uruchom Android Studio
+*   Na ekranie powitalnym wybierz "Open an existing Android Studio project" (Otwórz istniejący projekt Android Studio)
 
-* If it asks you to do a Gradle Sync, click OK.
+**Krok 2: Wybierz katalog projektu**
 
-* With your Android device connected to your computer and developer mode
-  enabled, click on the green Run arrow in Android Studio.
+*   W oknie "Open File or Project", które się pojawi, przejdź do lokalizacji, gdzie sklonowałeś repozytorium
+*   Znajdź i wybierz katalog `mediapipe/examples/text_embedder/android`
+*   Kliknij OK
+*   Możesz zostać zapytany, czy ufasz projektowi - wybierz "Trust" (Ufam)
 
-### Models used
+**Krok 3: Synchronizacja Gradle**
 
-Downloading, extraction, and placing the models into the *assets* folder is
-managed automatically by the **download.gradle** file.
+*   Android Studio może poprosić o wykonanie Gradle Sync (synchronizacji zależności projektu)
+*   Jeśli zobaczysz takie pytanie, kliknij OK
+*   Poczekaj, aż Gradle pobierze wszystkie wymagane biblioteki
+
+**Krok 4: Uruchom aplikację**
+
+*   Podłącz swoje urządzenie Android do komputera kablem USB
+*   Upewnij się, że tryb programisty i debugowanie USB są włączone
+*   Gdy urządzenie zostanie wykryte przez Android Studio, kliknij zieloną strzałkę "Run" (Uruchom) na górnym pasku narzędzi
+*   Aplikacja zostanie skompilowana i zainstalowana na Twoim urządzeniu
+
+**Jak używać aplikacji - pierwsze kroki:**
+1. Uruchom aplikację
+2. Wpisz pierwszy tekst (np. "Lubię jeść jabłka")
+3. Wpisz drugi tekst (np. "Uwielbiam owoce")
+4. Zobacz wynik podobieństwa semantycznego
+5. Eksperymentuj:
+   - Synonimy (wysokie podobieństwo)
+   - Antonim (niskie podobieństwo)
+   - Parafrazowanie (średnie do wysokiego podobieństwa)
+
+### Modele używane w aplikacji
+
+Pobieranie, rozpakowywanie i umieszczanie modeli w folderze *assets* jest zarządzane automatycznie przez plik **download.gradle**. Nie musisz martwić się o ręczne pobieranie modeli - wszystko dzieje się w tle podczas procesu budowania.

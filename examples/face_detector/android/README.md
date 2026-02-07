@@ -1,43 +1,74 @@
 
-# MediaPipe Tasks Face Detection Android Demo
+# MediaPipe Tasks - Demo Wykrywania Twarzy na Androidzie
 
-### Overview
+### Przegląd
 
-This is a camera app that continuously detects a face (bounding boxes and confidence) in the frames seen by your device's front camera, in an image imported from the device gallery,  or in a video imported by the device gallery.
+To jest aplikacja kamerowa, która w sposób ciągły wykrywa twarz (ramki ograniczające i pewność detekcji) w klatkach wideo widzianych przez przednią kamerę urządzenia, w obrazie zaimportowanym z galerii urządzenia lub w filmie zaimportowanym z galerii urządzenia.
 
-The model file is downloaded by a Gradle script when you build and run the app. You don't need to do any steps to download TFLite models into the project explicitly unless you wish to use your own model. If you do use your own model, place it into the app's *assets* directory.
+**Co wykrywa ta aplikacja?**
+Aplikacja znajduje twarze w obrazie i dla każdej twarzy pokazuje:
+- **Ramkę ograniczającą (bounding box)**: prostokąt wokół wykrytej twarzy
+- **Pewność detekcji (confidence)**: jak pewny jest model, że wykrył twarz (wartość od 0 do 1)
 
-This application should be run on a physical Android device to take advantage of the physical camera, though the gallery tab will enable you to use an emulator for opening locally stored files.
+**Dla początkujących - zastosowania:**
+- Wykrywanie twarzy to pierwszy krok w wielu aplikacjach:
+  - Aplikacje do selfie z filtrami
+  - Systemy bezpieczeństwa
+  - Automatyczne tagowanie zdjęć
+  - Wykrywanie emocji (wymaga dodatkowych modeli)
+  - Rozpoznawanie twarzy (wymaga dodatkowych modeli)
+
+**Informacja o modelu**: Plik modelu jest automatycznie pobierany przez skrypt Gradle podczas budowania i uruchamiania aplikacji. Nie musisz wykonywać kroków ręcznego pobierania modeli TFLite do projektu, chyba że chcesz użyć własnego modelu. Jeśli użyjesz własnego modelu, umieść go w katalogu *assets* aplikacji.
+
+**Wymagania sprzętowe**: Ta aplikacja powinna być uruchamiana na fizycznym urządzeniu Android, aby wykorzystać fizyczną kamerę. Możesz jednak użyć emulatora do testowania funkcjonalności galerii (otwieranie lokalnie zapisanych plików).
 
 ![Face Detection Demo](face_detection.png?raw=true "Face Detection Demo")
 
-## Build the demo using Android Studio
+## Budowanie demo w Android Studio - Instrukcja krok po kroku
 
-### Prerequisites
+### Wymagania wstępne (co musisz mieć przed rozpoczęciem)
 
-*   The **[Android Studio](https://developer.android.com/studio/index.html)**
-    IDE. This sample has been tested on Android Studio Dolphin.
+*   **[Android Studio](https://developer.android.com/studio/index.html)** - zintegrowane środowisko programistyczne (IDE) do tworzenia aplikacji Android. Ten przykład został przetestowany na Android Studio Dolphin. Jeśli nie masz zainstalowanego Android Studio, pobierz je z podanego linku.
 
-*   A physical Android device with a minimum OS version of SDK 24 (Android 7.0 -
-    Nougat) with developer mode enabled. The process of enabling developer mode
-    may vary by device. You may also use an Android emulator with more limited
-    functionality.
+*   **Fizyczne urządzenie Android** z minimalną wersją systemu SDK 24 (Android 7.0 - Nougat) z włączonym trybem programisty. 
+    
+    **Jak włączyć tryb programisty:**
+    1. Otwórz Ustawienia na urządzeniu Android
+    2. Przejdź do "O telefonie" lub "Informacje o urządzeniu"
+    3. Znajdź "Numer kompilacji" i kliknij go 7 razy
+    4. Pojawi się komunikat "Jesteś teraz programistą!"
+    5. Wróć do głównych ustawień i znajdź nową opcję "Opcje programisty"
+    6. Włącz "Debugowanie USB"
+    
+    Proces może się różnić w zależności od producenta urządzenia. Możesz również użyć emulatora Android, ale z ograniczoną funkcjonalnością (bez dostępu do kamery).
 
-### Building
+### Budowanie aplikacji - Szczegółowe kroki
 
-*   Open Android Studio. From the Welcome screen, select Open an existing
-    Android Studio project.
+**Krok 1: Otwórz projekt w Android Studio**
 
-*   From the Open File or Project window that appears, navigate to and select
-    the mediapipe/examples/face_detection/android directory. Click OK. You may
-    be asked if you trust the project. Select Trust.
+*   Uruchom Android Studio
+*   Na ekranie powitalnym wybierz "Open an existing Android Studio project" (Otwórz istniejący projekt Android Studio)
 
-*   If it asks you to do a Gradle Sync, click OK.
+**Krok 2: Wybierz katalog projektu**
 
-*   With your Android device connected to your computer and developer mode
-    enabled, click on the green Run arrow in Android Studio.
+*   W oknie "Open File or Project", które się pojawi, przejdź do lokalizacji, gdzie sklonowałeś repozytorium
+*   Znajdź i wybierz katalog `mediapipe/examples/face_detector/android`
+*   Kliknij OK
+*   Możesz zostać zapytany, czy ufasz projektowi - wybierz "Trust" (Ufam)
 
-### Models used
+**Krok 3: Synchronizacja Gradle**
 
-Downloading, extraction, and placing the models into the *assets* folder is
-managed automatically by the **download.gradle** file.
+*   Android Studio może poprosić o wykonanie Gradle Sync (synchronizacji zależności projektu)
+*   Jeśli zobaczysz takie pytanie, kliknij OK
+*   Poczekaj, aż Gradle pobierze wszystkie wymagane biblioteki - może to potrwać kilka minut przy pierwszym uruchomieniu
+
+**Krok 4: Uruchom aplikację**
+
+*   Podłącz swoje urządzenie Android do komputera kablem USB
+*   Upewnij się, że tryb programisty i debugowanie USB są włączone
+*   Gdy urządzenie zostanie wykryte przez Android Studio, kliknij zieloną strzałkę "Run" (Uruchom) na górnym pasku narzędzi
+*   Aplikacja zostanie skompilowana i zainstalowana na Twoim urządzeniu
+
+### Modele używane w aplikacji
+
+Pobieranie, rozpakowywanie i umieszczanie modeli w folderze *assets* jest zarządzane automatycznie przez plik **download.gradle**. Nie musisz martwić się o ręczne pobieranie modeli - wszystko dzieje się w tle podczas procesu budowania.

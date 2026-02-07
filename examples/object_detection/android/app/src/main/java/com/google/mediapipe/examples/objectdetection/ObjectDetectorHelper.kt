@@ -32,6 +32,23 @@ import com.google.mediapipe.tasks.vision.core.RunningMode
 import com.google.mediapipe.tasks.vision.objectdetector.ObjectDetector
 import com.google.mediapipe.tasks.vision.objectdetector.ObjectDetectorResult
 
+/**
+ * ObjectDetectorHelper - Klasa pomocnicza do wykrywania obiektów
+ * 
+ * Ta klasa jest sercem aplikacji detekcji obiektów. Zarządza modelem MediaPipe
+ * i wykonuje detekcję obiektów na obrazach, wideo i strumieniu z kamery.
+ * 
+ * Dla studentów: To jest wzorzec projektowy "Helper" (Pomocnik). Oddziela logikę
+ * detekcji od logiki interfejsu użytkownika, co ułatwia testowanie i utrzymanie kodu.
+ * 
+ * @param threshold - Próg pewności (0.0 - 1.0). Tylko obiekty z wyższą pewnością będą wykrywane
+ * @param maxResults - Maksymalna liczba wyników do zwrócenia (np. 5 = max 5 obiektów naraz)
+ * @param currentDelegate - Sprzęt do użycia: CPU (wolniejszy, uniwersalny) lub GPU (szybszy)
+ * @param currentModel - Który model użyć: EfficientDet-Lite0 (szybszy) lub Lite2 (dokładniejszy)
+ * @param runningMode - Tryb działania: IMAGE (pojedynczy obraz), VIDEO (film) lub LIVE_STREAM (kamera na żywo)
+ * @param context - Kontekst Android (dostęp do zasobów aplikacji)
+ * @param objectDetectorListener - Słuchacz wyników (tylko dla trybu LIVE_STREAM)
+ */
 class ObjectDetectorHelper(
     var threshold: Float = THRESHOLD_DEFAULT,
     var maxResults: Int = MAX_RESULTS_DEFAULT,
@@ -39,54 +56,90 @@ class ObjectDetectorHelper(
     var currentModel: Int = MODEL_EFFICIENTDETV0,
     var runningMode: RunningMode = RunningMode.IMAGE,
     val context: Context,
-    // The listener is only used when running in RunningMode.LIVE_STREAM
+    // Słuchacz jest używany tylko w trybie RunningMode.LIVE_STREAM
+    // Umożliwia asynchroniczne otrzymywanie wyników detekcji
     var objectDetectorListener: DetectorListener? = null
 ) {
 
-    // For this example this needs to be a var so it can be reset on changes. If the ObjectDetector
-    // will not change, a lazy val would be preferable.
+    // Instancja detektora obiektów MediaPipe
+    // To musi być var (nie val), ponieważ może być odtwarzany przy zmianie ustawień
+    // Dla niezmiennych detektorów lepiej użyć lazy val
     private var objectDetector: ObjectDetector? = null
+    
+    // Kąt obrotu obrazu (0, 90, 180 lub 270 stopni)
+    // Potrzebny, bo kamera może być obrócona względem urządzenia
     private var imageRotation = 0
+    
+    // Opcje przetwarzania obrazu (zawiera informacje o rotacji)
     private lateinit var imageProcessingOptions: ImageProcessingOptions
 
+    /**
+     * Blok inicjalizacyjny - wykonywany przy tworzeniu obiektu
+     * Automatycznie konfiguruje detektor obiektów z podanymi parametrami
+     */
     init {
         setupObjectDetector()
     }
 
+    /**
+     * Czyści i zamyka detektor obiektów
+     * 
+     * Ważne: Zawsze wywołuj tę funkcję, gdy skończysz używać detektora!
+     * Zwalnia zasoby (pamięć, GPU) używane przez model.
+     */
     fun clearObjectDetector() {
         objectDetector?.close()
         objectDetector = null
     }
 
-    // Initialize the object detector using current settings on the
-    // thread that is using it. CPU can be used with detectors
-    // that are created on the main thread and used on a background thread, but
-    // the GPU delegate needs to be used on the thread that initialized the detector
+    /**
+     * Inicjalizuje detektor obiektów używając bieżących ustawień
+     * 
+     * WAŻNE dla zaawansowanych: Ta funkcja musi być wywołana na tym samym wątku,
+     * który będzie używał detektora:
+     * - CPU: Może być utworzony na głównym wątku i używany w tle
+     * - GPU: Musi być używany na tym samym wątku, na którym został utworzony
+     * 
+     * Proces konfiguracji:
+     * 1. Wybiera sprzęt (CPU lub GPU)
+     * 2. Ładuje odpowiedni plik modelu
+     * 3. Ustawia opcje detekcji (próg, maksymalna liczba wyników)
+     * 4. Tworzy instancję detektora
+     */
     fun setupObjectDetector() {
-        // Set general detection options, including number of used threads
+        // Krok 1: Utwórz builder dla opcji bazowych
+        // BaseOptions to konfiguracja podstawowa dla wszystkich zadań MediaPipe
         val baseOptionsBuilder = BaseOptions.builder()
 
-        // Use the specified hardware for running the model. Default to CPU
+        // Krok 2: Wybierz sprzęt do uruchomienia modelu
+        // Delegate to "delegat" - decyduje, gdzie uruchomić model
         when (currentDelegate) {
             DELEGATE_CPU -> {
+                // CPU: Wolniejszy, ale działa zawsze i wszędzie
+                // Najlepszy do testowania i starszych urządzeń
                 baseOptionsBuilder.setDelegate(Delegate.CPU)
             }
 
             DELEGATE_GPU -> {
-                // Is there a check for GPU being supported?
+                // GPU: Szybszy (nawet 10x!), ale wymaga wsparcia GPU
+                // Sprawdź czy urządzenie wspiera GPU przed użyciem
                 baseOptionsBuilder.setDelegate(Delegate.GPU)
             }
         }
 
+        // Krok 3: Wybierz plik modelu
+        // Każdy model ma inne właściwości (szybkość vs dokładność)
         val modelName = when (currentModel) {
-            MODEL_EFFICIENTDETV0 -> "efficientdet-lite0.tflite"
-            MODEL_EFFICIENTDETV2 -> "efficientdet-lite2.tflite"
-            else -> "efficientdet-lite0.tflite"
+            MODEL_EFFICIENTDETV0 -> "efficientdet-lite0.tflite"  // Szybszy, mniej dokładny
+            MODEL_EFFICIENTDETV2 -> "efficientdet-lite2.tflite"  // Wolniejszy, bardziej dokładny
+            else -> "efficientdet-lite0.tflite"  // Domyślny model
         }
 
+        // Ustaw ścieżkę do modelu w katalogu assets aplikacji
         baseOptionsBuilder.setModelAssetPath(modelName)
 
-        // Check if runningMode is consistent with objectDetectorListener
+        // Krok 4: Sprawdź poprawność konfiguracji dla trybu LIVE_STREAM
+        // W trybie strumieniowym MUSISZ mieć słuchacza do odbierania wyników
         when (runningMode) {
             RunningMode.LIVE_STREAM -> {
                 if (objectDetectorListener == null) {
@@ -97,7 +150,8 @@ class ObjectDetectorHelper(
             }
 
             RunningMode.IMAGE, RunningMode.VIDEO -> {
-                // no-op
+                // Dla obrazów i wideo nie jest potrzebny słuchacz
+                // Wyniki są zwracane synchronicznie
             }
         }
 

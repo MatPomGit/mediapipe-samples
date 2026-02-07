@@ -1,40 +1,79 @@
-# MediaPipe Tasks Hand Landmark Detection Android Demo
+# MediaPipe Tasks - Demo Wykrywania Punktów Charakterystycznych Dłoni na Androidzie
 
-### Overview
+### Przegląd
 
-This is a camera app that can  detects hand landmarks either from continuous camera frames seen by your device's front camera, an image, or a video from the device's gallery using a custom **task** file.
+To jest aplikacja kamerowa, która wykrywa punkty charakterystyczne dłoni (hand landmarks) z ciągłych klatek wideo widzianych przez przednią kamerę urządzenia, z obrazu lub filmu z galerii urządzenia. Wykorzystuje specjalny plik **task** (zadania).
 
-The task file is downloaded by a Gradle script when you build and run the app. You don't need to do any additional steps to download task files into the project explicitly unless you wish to use your own landmark detection task. If you do use your own task file, place it into the app's *assets* directory.
+**Co to są punkty charakterystyczne dłoni?**
+Punkty charakterystyczne (landmarks) to kluczowe punkty na dłoni, takie jak:
+- Czubki palców (5 punktów)
+- Stawy palców (po 3 punkty na każdy palec)
+- Podstawa dłoni
+- Nadgarstek
 
-This application should be run on a physical Android device to take advantage of the camera.
+Łącznie aplikacja wykrywa 21 punktów charakterystycznych dla każdej dłoni! Te punkty pozwalają na:
+- Rozpoznawanie gestów
+- Śledzenie ruchu dłoni
+- Tworzenie aplikacji AR (rozszerzonej rzeczywistości)
+- Tworzenie interaktywnych gier sterowanych ruchem dłoni
+
+**Informacja o pliku task**: Plik zadania jest automatycznie pobierany przez skrypt Gradle podczas budowania i uruchamiania aplikacji. Nie musisz wykonywać dodatkowych kroków, aby pobrać pliki zadań do projektu, chyba że chcesz użyć własnego pliku do wykrywania punktów charakterystycznych. Jeśli użyjesz własnego pliku zadania, umieść go w katalogu *assets* aplikacji.
+
+**Wymagania sprzętowe**: Ta aplikacja powinna być uruchamiana na fizycznym urządzeniu Android, aby wykorzystać kamerę.
 
 ![Hand Landmark Detection Demo](landmarker.gif?raw=true "Hand Landmark Detection Demo")
 
-## Build the demo using Android Studio
+## Budowanie demo w Android Studio - Instrukcja krok po kroku
 
-### Prerequisites
+### Wymagania wstępne (co musisz mieć przed rozpoczęciem)
 
-*   The **[Android Studio](https://developer.android.com/studio/index.html)** IDE. This sample has been tested on Android Studio Dolphin.
+*   **[Android Studio](https://developer.android.com/studio/index.html)** - zintegrowane środowisko programistyczne (IDE) do tworzenia aplikacji Android. Ten przykład został przetestowany na Android Studio Dolphin. Jeśli nie masz zainstalowanego Android Studio, pobierz je z podanego linku.
 
-*   A physical Android device with a minimum OS version of SDK 24 (Android 7.0 -
-    Nougat) with developer mode enabled. The process of enabling developer mode
-    may vary by device.
+*   **Fizyczne urządzenie Android** z minimalną wersją systemu SDK 24 (Android 7.0 - Nougat) z włączonym trybem programisty. 
+    
+    **Jak włączyć tryb programisty:**
+    1. Otwórz Ustawienia na urządzeniu Android
+    2. Przejdź do "O telefonie" lub "Informacje o urządzeniu"
+    3. Znajdź "Numer kompilacji" i kliknij go 7 razy
+    4. Pojawi się komunikat "Jesteś teraz programistą!"
+    5. Wróć do głównych ustawień i znajdź nową opcję "Opcje programisty"
+    6. Włącz "Debugowanie USB"
+    
+    Proces może się różnić w zależności od producenta urządzenia.
 
-### Building
+### Budowanie aplikacji - Szczegółowe kroki
 
-*   Open Android Studio. From the Welcome screen, select Open an existing
-    Android Studio project.
+**Krok 1: Otwórz projekt w Android Studio**
 
-*   From the Open File or Project window that appears, navigate to and select
-    the mediapipe/examples/hand_landmarker/android directory. Click OK. You may
-    be asked if you trust the project. Select Trust.
+*   Uruchom Android Studio
+*   Na ekranie powitalnym wybierz "Open an existing Android Studio project" (Otwórz istniejący projekt Android Studio)
 
-*   If it asks you to do a Gradle Sync, click OK.
+**Krok 2: Wybierz katalog projektu**
 
-*   With your Android device connected to your computer and developer mode
-    enabled, click on the green Run arrow in Android Studio.
+*   W oknie "Open File or Project", które się pojawi, przejdź do lokalizacji, gdzie sklonowałeś repozytorium
+*   Znajdź i wybierz katalog `mediapipe/examples/hand_landmarker/android`
+*   Kliknij OK
+*   Możesz zostać zapytany, czy ufasz projektowi - wybierz "Trust" (Ufam)
 
-### Models used
+**Krok 3: Synchronizacja Gradle**
 
-Downloading, extraction, and placing the models into the *assets* folder is
-managed automatically by the **download.gradle** file.
+*   Android Studio może poprosić o wykonanie Gradle Sync (synchronizacji zależności projektu)
+*   Jeśli zobaczysz takie pytanie, kliknij OK
+*   Poczekaj, aż Gradle pobierze wszystkie wymagane biblioteki - może to potrwać kilka minut przy pierwszym uruchomieniu
+
+**Krok 4: Uruchom aplikację**
+
+*   Podłącz swoje urządzenie Android do komputera kablem USB
+*   Upewnij się, że tryb programisty i debugowanie USB są włączone
+*   Gdy urządzenie zostanie wykryte przez Android Studio, kliknij zieloną strzałkę "Run" (Uruchom) na górnym pasku narzędzi
+*   Aplikacja zostanie skompilowana i zainstalowana na Twoim urządzeniu
+
+**Jak używać aplikacji:**
+1. Po uruchomieniu aplikacja automatycznie włączy kamerę
+2. Umieść dłoń przed kamerą
+3. Zobaczysz 21 punktów rysowanych na Twojej dłoni
+4. Spróbuj różnych gestów i pozycji dłoni!
+
+### Modele używane w aplikacji
+
+Pobieranie, rozpakowywanie i umieszczanie modeli w folderze *assets* jest zarządzane automatycznie przez plik **download.gradle**. Nie musisz martwić się o ręczne pobieranie modeli - wszystko dzieje się w tle podczas procesu budowania.
